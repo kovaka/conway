@@ -1,6 +1,10 @@
 import numpy as np
 from collections import OrderedDict
 
+"""
+@author kovaka
+"""
+
 class Board():
     """
         Attributes:
@@ -11,8 +15,10 @@ class Board():
         self.cells = OrderedDict()
     
     def evolve(self):
+        """ advance the board one generation """
         next_state = OrderedDict()
         new_cells = []
+        dead_cells = []
 
         for loc in self.cells:
             cell = self.cells[loc]
@@ -21,6 +27,8 @@ class Board():
             print "loc {} has {} neighbors".format(loc, neighbors)
             if neighbors in (2, 3):
                 next_state[loc] = cell
+            else:
+                dead_cells.append(loc)
 
             open_cells = cell.get_open_neighbors()
 
@@ -32,15 +40,13 @@ class Board():
                         new_cells.append(space)
 
         for cell in new_cells:
-            self.birth(cell[0], cell[1])
+            self.birth(cell[0], cell[1]) 
+
+        for cell in dead_cells:
+            cell.die()
 
         self.cells = next_state
         self.next_state = OrderedDict()
-
-    def find_cell(x, y):
-        if (x, y) in self.cells:
-            return self.cells[(x, y)]
-        return None
 
     def count_neighbors(self, loc):
         """ Count how many neighbors an open space has """
@@ -55,6 +61,7 @@ class Board():
         return count
 
     def birth(self, x, y):
+        """add a cell to the board"""
         if (x, y) in self.cells:
             raise ValueError("cell ({}, {}) is already mapped".format(x, y))
 
@@ -72,6 +79,7 @@ class Board():
                     cell.set_neighbor(neighbor)
 
     def print_board(self):
+        """ Quickly print a simple text representation of the board to the console """
         raise NotImplementedError()
 
 class Cell():
@@ -137,5 +145,5 @@ class Cell():
                 if cell != None:
                     xtrans = self.x - cell.x
                     ytrans = self.y - cell.y
-                    cell.set_neighbor(xtrans, ytrans, None)
+                    cell.set_neighbor(-xtrans, -ytrans, None)
 

@@ -1,4 +1,10 @@
 #!/usr/bin/python
+"""
+a quick test script for quickly checking functionality
+
+@author kovaka
+
+"""
 from board import Board, Cell
 
 board = Board()
