@@ -43,7 +43,7 @@ class Board():
             self.birth(cell[0], cell[1]) 
 
         for cell in dead_cells:
-            cell.die()
+            self.cells[cell].die()
 
         self.cells = next_state
         self.next_state = OrderedDict()
@@ -145,5 +145,5 @@ class Cell():
                 if cell != None:
                     xtrans = self.x - cell.x
                     ytrans = self.y - cell.y
-                    cell.set_neighbor(-xtrans, -ytrans, None)
+                    cell.neighbors[-xtrans + 1, -ytrans + 1] = None
 

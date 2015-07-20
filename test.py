@@ -14,3 +14,6 @@ board.birth(0, 1)
 board.birth(-1, -1)
 board.birth(0, -1)
 board.birth(1, -1)
+
+for x in range(10):
+    board.evolve()
