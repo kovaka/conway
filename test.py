@@ -16,6 +16,9 @@ board.birth(-1, -1)
 board.birth(0, -1)
 board.birth(1, -1)
 
+for loc in board:
+    print loc
+
 try:
     while True:
         print board

@@ -42,7 +42,7 @@ class Board():
                         new_cells.append(space)
 
         for loc in dead_cells:
-            self.cells[loc].die()
+            self.die(loc[0], loc[1])
 
         self.cells = next_state
 
@@ -65,6 +65,9 @@ class Board():
             if space in self.cells:
                 count += 1
         return count
+    
+    def die(self, x, y):
+        self.cells[(x, y)].die()
 
     def birth(self, x, y):
         """add a cell to the board"""
@@ -83,16 +86,32 @@ class Board():
                     neighbor = self.cells[loc]
                     cell.connect(neighbor)
 
+    def cell_count():
+        return len(self.cells)
+
+    def __iter__(self):
+        """allow someone to iterate over all the cells"""
+        return self.cells.__iter__()
+
     def __str__(self, minX=-20, maxX=20, minY=-10, maxY=10):
-        """ Quickly print a simple text representation of the board to the console """
+        """Calculate the average location of all cells and print a quick text
+        representation of the board centered at that location"""
+        avgX = 0
+        avgY = 0
+        for loc in self.cells:
+            avgX += loc[0]
+            avgY += loc[1]
+        avgX = avgX / len(self.cells)
+        avgY = avgY / len(self.cells)
+
         board = ''
         row = ' '
         for x in range(minX, maxX+1):
             row += '_'
         board += row + ' \n'
-        for y in range(maxY, minY, -1):
+        for y in range(avgY + maxY, avgY + minY, -1):
             row = '|'
-            for x in range(minX, maxX + 1):
+            for x in range(avgX + minX, avgX + maxX + 1):
                 if (x, y) in self.cells:
                     row += '#'
                 else:
@@ -103,7 +122,6 @@ class Board():
             row += '_'
         board += row + '|'
         return board
-
 
 class Cell():
     """One living object in the world
@@ -116,6 +134,7 @@ class Cell():
     def __init__(self, x, y):
         self.x = x
         self.y = y
+        self.num_neighbors = 0
         self.neighbors = np.array([
             [None, None, None],
             [None, None, None],
@@ -123,12 +142,7 @@ class Cell():
         ]) 
 
     def count_neighbors(self):
-        count = 0
-        for row in self.neighbors:
-            for cell in row:
-                if cell != None:
-                    count += 1
-        return count
+        return self.num_neighbors
 
     def get_open_neighbors(self):
         result = []
@@ -158,7 +172,12 @@ class Cell():
             raise ValueError("cannot connect a cell to itself {} to {}".format((self.x, self.y), (cell.x, cell.y)))
 
         self.neighbors[xtrans + 1, ytrans + 1] = cell
+        self.num_neighbors += 1
+        assert(self.num_neighbors >= 0 and self.num_neighbors < 9)
+
         cell.neighbors[-xtrans + 1, -ytrans + 1] = self
+        cell.num_neighbors += 1
+        assert(cell.num_neighbors >= 0 and cell.num_neighbors < 9)
 
     def die(self):
         for row in self.neighbors:
@@ -167,4 +186,5 @@ class Cell():
                     xtrans = self.x - cell.x
                     ytrans = self.y - cell.y
                     cell.neighbors[-xtrans + 1, -ytrans + 1] = None
-
+                    cell.num_neighbors -= 1
+                    assert(cell.num_neighbors >= 0 and cell.num_neighbors < 9)
