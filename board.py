@@ -3,6 +3,8 @@ from collections import OrderedDict
 
 """
 @author kovaka
+
+Implements the internal data structure for conway's game of life
 """
 
 class Board():
@@ -13,7 +15,7 @@ class Board():
 
     def __init__(self):
         self.cells = OrderedDict()
-    
+
     def evolve(self):
         """ advance the board one generation """
         next_state = OrderedDict()
@@ -34,28 +36,33 @@ class Board():
             for space in open_cells:
                 if space in self.cells:
                     continue
+                neighbors = self.count_neighbors(space)
                 if self.count_neighbors(space) == 3:
                     if space not in new_cells:
                         new_cells.append(space)
 
-        for cell in new_cells:
-            self.birth(cell[0], cell[1]) 
-
-        for cell in dead_cells:
-            self.cells[cell].die()
+        for loc in dead_cells:
+            self.cells[loc].die()
 
         self.cells = next_state
-        self.next_state = OrderedDict()
+
+        for loc in new_cells:
+            x = loc[0]
+            y = loc[1]
+            self.birth(x, y) 
 
     def count_neighbors(self, loc):
         """ Count how many neighbors an open space has """
         x = loc[0]
         y = loc[1]
-        neighbors = [(x-1, y-1), (x, y-1), (x+1, y-1), (x-1, y), (x+1, y), (x-1, y+1), (x, y+1), (x+1, y+1)] 
-
+        neighbors = []
+        for xtrans in range(-1, 2):
+            for ytrans in range(-1, 2):
+                if xtrans != 0 or ytrans != 0:
+                    neighbors.append((x + xtrans, y + ytrans))
         count = 0
-        for cell in neighbors:
-            if cell in self.cells:
+        for space in neighbors:
+            if space in self.cells:
                 count += 1
         return count
 
@@ -74,7 +81,7 @@ class Board():
                 loc = (x + xtrans, y + ytrans)   
                 if loc in self.cells:
                     neighbor = self.cells[loc]
-                    cell.set_neighbor(neighbor)
+                    cell.connect(neighbor)
 
     def __str__(self, minX=-20, maxX=20, minY=-10, maxY=10):
         """ Quickly print a simple text representation of the board to the console """
@@ -96,7 +103,7 @@ class Board():
             row += '_'
         board += row + '|'
         return board
-        
+
 
 class Cell():
     """One living object in the world
@@ -143,9 +150,9 @@ class Cell():
 
         return self.neighbors[xtrans + 1][ytrans + 1]
 
-    def set_neighbor(self, cell):
-        xtrans = cell.x - self.x
-        ytrans = cell.y - self.y
+    def connect(self, cell):
+        xtrans = self.x - cell.x
+        ytrans = self.y - cell.y
 
         if xtrans == 0 and ytrans == 0:
             raise ValueError("cannot connect a cell to itself {} to {}".format((self.x, self.y), (cell.x, cell.y)))
