@@ -20,7 +20,7 @@ try:
     while True:
         print board
         board.evolve()
-        keyWait = raw_input()
+        sleep(1)
 except KeyboardInterrupt:
     print 'exiting...'
 except Exception as inst:
