@@ -24,7 +24,6 @@ class Board():
             cell = self.cells[loc]
             neighbors = cell.count_neighbors()
 
-            print "loc {} has {} neighbors".format(loc, neighbors)
             if neighbors in (2, 3):
                 next_state[loc] = cell
             else:
@@ -68,7 +67,6 @@ class Board():
         cell = Cell(x, y)
         self.cells[(x, y)] = cell
 
-        print "finding neighbors for {}, {}".format(x, y)
         for xtrans in range(-1, 2):
             for ytrans in range(-1, 2):
                 if xtrans == 0 and ytrans == 0:
@@ -78,9 +76,27 @@ class Board():
                     neighbor = self.cells[loc]
                     cell.set_neighbor(neighbor)
 
-    def print_board(self):
+    def __str__(self, minX=-20, maxX=20, minY=-10, maxY=10):
         """ Quickly print a simple text representation of the board to the console """
-        raise NotImplementedError()
+        board = ''
+        row = ' '
+        for x in range(minX, maxX+1):
+            row += '_'
+        board += row + ' \n'
+        for y in range(maxY, minY, -1):
+            row = '|'
+            for x in range(minX, maxX + 1):
+                if (x, y) in self.cells:
+                    row += '#'
+                else:
+                    row += ' '
+            board += row + '|\n'
+        row = '|'
+        for x in range(minX, maxX+1):
+            row += '_'
+        board += row + '|'
+        return board
+        
 
 class Cell():
     """One living object in the world
@@ -136,8 +152,6 @@ class Cell():
 
         self.neighbors[xtrans + 1, ytrans + 1] = cell
         cell.neighbors[-xtrans + 1, -ytrans + 1] = self
-
-        print 'connected {},{} to {}, {}'.format(self.x, self.y, cell.x, cell.y)
 
     def die(self):
         for row in self.neighbors:

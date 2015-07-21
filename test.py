@@ -6,6 +6,7 @@ a quick test script for quickly checking functionality
 
 """
 from board import Board, Cell
+from time import sleep
 
 board = Board()
 
@@ -15,5 +16,12 @@ board.birth(-1, -1)
 board.birth(0, -1)
 board.birth(1, -1)
 
-for x in range(10):
-    board.evolve()
+try:
+    while True:
+        print board
+        board.evolve()
+        keyWait = raw_input()
+except KeyboardInterrupt:
+    print 'exiting...'
+except Exception as inst:
+    print inst
