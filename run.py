@@ -10,30 +10,46 @@ from Window import Window
 from time import sleep
 from multiprocessing import Process, Queue
 
-
 def run_board(states):
+    """push world states onto the Queue"""
     board = Board()
 
-    board.birth(5, 6)
-    board.birth(6, 5)
-    board.birth(4, 4)
-    board.birth(5, 4)
-    board.birth(6, 4)
+    coords = [(0, 1), (1, 0), (-1, -1), (0, -1), (1, -1)]
 
-    while True:
-        board.evolve()
-        cells = board.get_cells()
-        states.put(cells)
+    for x, y in coords:
+        board.birth(x - 50, y + 20)
+
+    for x, y in coords:
+        board.birth(x, y + 20)
+
+    for x, y in coords:
+        board.birth(x - 50, y)
+
+    for x, y in coords:
+        board.birth(x, y)
+
+    try:
+        while True:
+            board.evolve()
+            cells = board.get_cells()
+            states.put(cells)
+    except KeyboardInterrupt:
+        return
 
 def run_window(states):
+    """pull world states off of the queue and print them"""
     with Window() as window:
-        while True:
-            cell_state = states.get()
-            window.draw_board(cell_state)
-            sleep(0.25)
+        try:
+            while True:
+                cell_state = states.get()
+                window.draw_board(cell_state)
+                window.get_arrow_key(250)
+        except KeyboardInterrupt:
+            return
+
 
 def main():
-    states = Queue()
+    states = Queue(maxsize=50)
 
     board_ps = Process(target=run_board, args=(states,))
     window_ps = Process(target=run_window, args=(states,))
@@ -41,8 +57,17 @@ def main():
     board_ps.start()
     window_ps.start()
 
-    board_ps.join()
-    window_ps.join()
+    try:
+        board_ps.join()
+        window_ps.join()
+    except KeyboardInterrupt:
+        board_ps.terminate()
+        window_ps.terminate()
+    finally:
+        board_ps.join()
+        window_ps.join()
+
+    print 'done...'
 
 if __name__ == "__main__":
     main()
