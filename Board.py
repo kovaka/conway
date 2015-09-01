@@ -16,6 +16,10 @@ class Board():
     def __init__(self):
         self.cells = OrderedDict()
 
+    def get_cells(self):
+        """Return a list of tuples containing the coordinates of all cells"""
+        return self.cells.keys()
+
     def evolve(self):
         """ advance the board one generation """
         next_state = OrderedDict()
@@ -52,7 +56,7 @@ class Board():
             self.birth(x, y) 
 
     def count_neighbors(self, loc):
-        """ Count how many neighbors an open space has """
+        """Count how many neighbors an open space has"""
         x = loc[0]
         y = loc[1]
         neighbors = []
@@ -70,7 +74,7 @@ class Board():
         self.cells[(x, y)].die()
 
     def birth(self, x, y):
-        """add a cell to the board"""
+        """Add a cell to the board"""
         if (x, y) in self.cells:
             raise ValueError("cell ({}, {}) is already mapped".format(x, y))
 
@@ -87,15 +91,15 @@ class Board():
                     cell.connect(neighbor)
 
     def cell_count():
+        """Return the number of living cells"""
         return len(self.cells)
 
     def __iter__(self):
-        """allow someone to iterate over all the cells"""
+        """Allow someone to iterate over all the cells"""
         return self.cells.__iter__()
 
     def __str__(self, minX=-20, maxX=20, minY=-10, maxY=10):
-        """Calculate the average location of all cells and print a quick text
-        representation of the board centered at that location"""
+        """Print a quick text representation of the board"""
         avgX = 0
         avgY = 0
         for loc in self.cells:
@@ -125,10 +129,11 @@ class Board():
 
 class Cell():
     """One living object in the world
-        Attributes:
-            x : the integer x location of the piece
-            y : the integer y location of the piece
-            neighbors : a list of this cells neighbors
+
+    Attributes:
+        x : the integer x location of the piece
+        y : the integer y location of the piece
+        neighbors : a list of this cells neighbors
     """
 
     def __init__(self, x, y):
@@ -142,9 +147,11 @@ class Cell():
         ]) 
 
     def count_neighbors(self):
+        """Return the number of living neighbors this cell has"""
         return self.num_neighbors
 
     def get_open_neighbors(self):
+        """Return the open spaces next to this cell"""
         result = []
         for xtrans in range(-1, 2):
             for ytrans in range(-1, 2):
@@ -155,6 +162,7 @@ class Cell():
         return result
 
     def get_neighbor(self, xtrans, ytrans):
+        """Get the Cell object of the neighbor in the direction <xtrans, ytrans>"""
         if not isinstance(xtrans, (int, long)) or not isinstance(ytrans, (int, long)):
             raise TypeError("[{}, {}], xtrans and ytrans must both be integers".format(xtrans, ytrans))
         elif xtrans == 0 and ytrans == 0:
@@ -165,6 +173,7 @@ class Cell():
         return self.neighbors[xtrans + 1][ytrans + 1]
 
     def connect(self, cell):
+        """connect this cell to another cell"""
         xtrans = self.x - cell.x
         ytrans = self.y - cell.y
 
@@ -180,6 +189,7 @@ class Cell():
         assert(cell.num_neighbors >= 0 and cell.num_neighbors < 9)
 
     def die(self):
+        """Sever a cell from all of its neighbors"""
         for row in self.neighbors:
             for cell in row:
                 if cell != None:

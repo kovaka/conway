@@ -5,7 +5,7 @@ a quick test script for quickly checking functionality
 @author kovaka
 
 """
-from board import Board, Cell
+from board import Board
 from time import sleep
 
 board = Board()
@@ -16,8 +16,7 @@ board.birth(-1, -1)
 board.birth(0, -1)
 board.birth(1, -1)
 
-for loc in board:
-    print loc
+print board.get_cells()
 
 try:
     while True:
