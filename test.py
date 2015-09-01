@@ -5,35 +5,44 @@ a quick test script for quickly checking functionality
 @author kovaka
 
 """
+from Board import Board
 from Window import Window
 from time import sleep
+from multiprocessing import Process, Queue
 
-def test_board():
+
+def run_board(states):
     board = Board()
 
-    board.birth(1, 0)
-    board.birth(0, 1)
-    board.birth(-1, -1)
-    board.birth(0, -1)
-    board.birth(1, -1)
+    board.birth(5, 6)
+    board.birth(6, 5)
+    board.birth(4, 4)
+    board.birth(5, 4)
+    board.birth(6, 4)
 
-    print board.get_cells()
+    while True:
+        board.evolve()
+        cells = board.get_cells()
+        states.put(cells)
 
-    try:
+def run_window(states):
+    with Window() as window:
         while True:
-            print board
-            board.evolve()
-            sleep(1)
-    except KeyboardInterrupt:
-        print 'exiting...'
-    except Exception as inst:
-        print inst
+            cell_state = states.get()
+            window.draw_board(cell_state)
+            sleep(0.25)
 
+def main():
+    states = Queue()
 
-def test_window():
-    window = Window()
-    sleep(5)
-    window.destroy()
+    board_ps = Process(target=run_board, args=(states,))
+    window_ps = Process(target=run_window, args=(states,))
+
+    board_ps.start()
+    window_ps.start()
+
+    board_ps.join()
+    window_ps.join()
 
 if __name__ == "__main__":
-    test_window()
+    main()
