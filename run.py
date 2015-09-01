@@ -9,6 +9,11 @@ from Board import Board
 from Window import Window
 from time import sleep
 from multiprocessing import Process, Queue
+import signal
+
+def sigterm_handler(_signo, _stack_fram):
+    """Installing this handler it the __exit__ function to be called???"""
+    return
 
 def run_board(states):
     """push world states onto the Queue"""
@@ -38,14 +43,15 @@ def run_board(states):
 
 def run_window(states):
     """pull world states off of the queue and print them"""
-    with Window() as window:
-        try:
+    signal.signal(signal.SIGTERM, sigterm_handler)
+    try:
+        with Window() as window:
             while True:
                 cell_state = states.get()
                 window.draw_board(cell_state)
                 window.get_arrow_key(250)
-        except KeyboardInterrupt:
-            return
+    except KeyboardInterrupt:
+        return
 
 
 def main():
