@@ -7,7 +7,6 @@ https://docs.python.org/2/howto/curses.html#curses-howto
 
 """
 
-
 class Window():
     """
     Attributes:
