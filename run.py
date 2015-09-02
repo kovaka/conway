@@ -49,7 +49,8 @@ def run_window(states):
             while True:
                 cell_state = states.get()
                 window.draw_board(cell_state)
-                window.get_arrow_key(250)
+                for i in range(2):
+                    window.get_arrow_key(125)
     except KeyboardInterrupt:
         return
 
