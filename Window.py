@@ -20,6 +20,7 @@ class Window():
         self.stdscr = curses.initscr()
         curses.noecho()
         curses.cbreak() 
+        curses.curs_set(0)
         self.stdscr.keypad(1)
         self.stdscr.border()
         self.stdscr.refresh()
