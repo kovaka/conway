@@ -6,7 +6,10 @@ class Initializer():
     @staticmethod
     def gliders(board):
         """set up the board to contain four gliders"""
-        coords = [(0, 1), (1, 0), (-1, -1), (0, -1), (1, -1)]
+        coords = [
+                        (0, 1),
+                                    (1, 0),
+            (-1, -1),   (0, -1),    (1, -1)]
         for x, y in coords:
             board.birth(x - 50, y + 20)
         for x, y in coords:
@@ -34,6 +37,9 @@ class Initializer():
 
 
         ]
+        translations = [(0, 0), (-100, 100), (-100, 0), (100, 0), (0, 100), (100, 100), (100, -100)]
+
         for x, y in coords:
-            board.birth(x, y)
-            board.birth(-1 * x + 1, y)
+            for trans_x, trans_y in translations:
+                board.birth(x + trans_x, y + trans_y)
+                board.birth(-1 * x + 1 + trans_x, y + trans_y)

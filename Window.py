@@ -54,7 +54,9 @@ class Window():
                 self.stdscr.addch(y, x, '#')
 
         self.stdscr.border()
-        self.stdscr.refresh() 
+        self.stdscr.refresh()
+
+        self.stdscr.addstr(0, 0, str(self.offset))
 
     def get_width(self):
         return self.width
