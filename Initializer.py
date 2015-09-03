@@ -1,11 +1,10 @@
 __author__ = 'kovaka'
 
-
 class Initializer():
 
     @staticmethod
     def gliders(board):
-        """set up the board to contain four gliders"""
+        """Set up the board to contain four gliders"""
         rows =  [
             '.*',
             '..*',
@@ -53,6 +52,33 @@ class Initializer():
         Initializer.place_cells(board, rows)
 
     @staticmethod
+    def bi_gun(board):
+        rows = [
+            '...........*',
+            '..........**',
+            '.........**',
+            '..........**..**',
+            '......................................*',
+            '......................................**........**',
+            '.......................................**.......**',
+            '..........**..**..................**..**',
+            '**.......**',
+            '**........**',
+            '...........*',
+            '..................................**..**',
+            '.......................................**',
+            '......................................**',
+            '......................................*',
+        ]
+        Initializer.place_cells(board, rows)
+
+    @staticmethod
+    def init_file(board, filename):
+        with open(filename) as f:
+            lines = f.readlines()
+            Initializer.place_cells(board, lines)
+
+    @staticmethod
     def place_cells(board, row_strings, offset_x = 0, offset_y = 0):
         coords = Initializer.get_coordinates(row_strings)
         for x, y in coords:
@@ -65,10 +91,11 @@ class Initializer():
         """
         coords = []
         for index, row_string  in enumerate(rows):
+            if row_string[0] in ('#', '!'):
+                continue
+
             y = len(rows) - index - 1
             for x, c in enumerate(row_string):
-                if c == '*':
+                if c in ('*', 'O'):
                     coords.append((x + 1, y))
         return coords
-
-
