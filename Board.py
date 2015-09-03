@@ -96,7 +96,7 @@ class Board():
         """Allow someone to iterate over all the cells"""
         return self.cells.__iter__()
 
-    def __str__(self, minX=-20, maxX=20, minY=-10, maxY=10):
+    def __str__(self, minX=-50, maxX=50, minY=-25, maxY=25):
         """Print a quick text representation of the board"""
         avgX = 0
         avgY = 0

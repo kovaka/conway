@@ -69,6 +69,12 @@ class Window():
         """move in the direction specified by the vector direction"""
         self.offset = (self.offset[0] + direction[0], self.offset[1] + direction[1])
 
+    def pause(self):
+        message = 'Hit any key to continue'
+        if len(message) < self.get_width():
+            self.stdscr.addstr(0, 0, 'Hit any key to continue')
+        self.stdscr.getch()
+
     def get_arrow_key(self, timeout = 1000):
         self.stdscr.timeout(timeout)
         direction = (0, 0)

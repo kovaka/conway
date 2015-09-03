@@ -3,76 +3,6 @@ __author__ = 'kovaka'
 class Initializer():
 
     @staticmethod
-    def gliders(board):
-        """Set up the board to contain four gliders"""
-        rows =  [
-            '.*',
-            '..*',
-            '***',
-        ]
-        for x in (-1, 0, 1):
-            for y in (-1, 0, 1):
-                Initializer.place_cells(board, rows, x * 50, y * 50)
-
-
-    @staticmethod
-    def weekender(board):
-        """Initialize with the weekender formation, but in many places"""
-        rows = [
-            '.*............*',
-            '.*............*',
-            '*.*..........*.*',
-            '.*............*',
-            '.*............*',
-            '..*...****...*',
-            '......****',
-            '..****....****',
-            '.',
-            '....*......*',
-            '.....**..**',
-        ]
-        for x in range(-5, 5):
-            for y in range(-5, 5):
-                Initializer.place_cells(board, rows, x * 75, y * 75)
-
-    @staticmethod
-    def glidergun(board):
-        """Initialize the board to contain Gosper's Glider Gun"""
-        rows =  [
-            '........................*',
-            '......................*.*',
-            '............**......**............**',
-            '...........*...*....**............**',
-            '**........*.....*...**',
-            '**........*...*.**....*.*',
-            '..........*.....*.......*',
-            '...........*...*',
-            '............**',
-        ]
-        Initializer.place_cells(board, rows)
-
-    @staticmethod
-    def bi_gun(board):
-        rows = [
-            '...........*',
-            '..........**',
-            '.........**',
-            '..........**..**',
-            '......................................*',
-            '......................................**........**',
-            '.......................................**.......**',
-            '..........**..**..................**..**',
-            '**.......**',
-            '**........**',
-            '...........*',
-            '..................................**..**',
-            '.......................................**',
-            '......................................**',
-            '......................................*',
-        ]
-        Initializer.place_cells(board, rows)
-
-    @staticmethod
     def init_file(board, filename):
         with open(filename) as f:
             lines = f.readlines()
@@ -90,12 +20,14 @@ class Initializer():
         coordinates of living cells
         """
         coords = []
+        y = 0
         for index, row_string  in enumerate(rows):
             if row_string[0] in ('#', '!'):
                 continue
 
-            y = len(rows) - index - 1
-            for x, c in enumerate(row_string):
-                if c in ('*', 'O'):
+            for x, char in enumerate(row_string):
+                if char in ('*', 'O'):
                     coords.append((x + 1, y))
+
+            y += 1
         return coords

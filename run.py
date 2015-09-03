@@ -16,7 +16,9 @@ from Initializer import Initializer
 def run_board(states):
     """push world states onto the Queue"""
     board = Board()
-    Initializer.init_file(board, './boards/test.cells')
+    Initializer.init_file(board, './boards/gosperglidergun.cells')
+    cells = board.get_cells()
+    states.put(cells)
 
     try:
         while True:
@@ -29,6 +31,9 @@ def run_board(states):
 def run_window(states):
     """pull world states off of the queue and print them"""
     with Window() as window:
+        cell_state = states.get()
+        window.draw_board(cell_state)
+        window.pause()
         while True:
             cell_state = states.get()
             window.draw_board(cell_state)
