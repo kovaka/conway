@@ -81,6 +81,10 @@ class Window():
             direction = (0, -1)
         elif char == curses.KEY_DOWN:
             direction = (0, 1)
+        elif char == ord(' '):
+            # pause until a key is pressed
+            self.stdscr.timeout(-1)
+            self.stdscr.getch()
 
         self.move(direction)
         self.stdscr.timeout(-1)

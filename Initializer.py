@@ -6,23 +6,19 @@ class Initializer():
     @staticmethod
     def gliders(board):
         """set up the board to contain four gliders"""
-        coords = [
-                        (0, 1),
-                                    (1, 0),
-            (-1, -1),   (0, -1),    (1, -1)]
-        for x, y in coords:
-            board.birth(x - 50, y + 20)
-        for x, y in coords:
-            board.birth(x, y + 20)
-        for x, y in coords:
-            board.birth(x - 50, y)
-        for x, y in coords:
-            board.birth(x, y)
+        coords =  [
+            '.#.',
+            '..#',
+            '###',
+        ]
+        Initializer.place_cells(board, coords)
+
 
     @staticmethod
     def weekender(board):
 
         coords = [
+            
                                                                                     (7, 6),
                                                                                     (7, 5),
                                                                         (6, 4),                 (8, 4),
@@ -43,3 +39,36 @@ class Initializer():
             for trans_x, trans_y in translations:
                 board.birth(x + trans_x, y + trans_y)
                 board.birth(-1 * x + 1 + trans_x, y + trans_y)
+
+
+    @staticmethod
+    def glidergun(board):
+        rows =  [
+            '........................#',
+            '......................#.#',
+            '............##......##............##',
+            '...........#...#....##............##',
+            '##........#.....#...##',
+            '##........#...#.##....#.#',
+            '..........#.....#.......#',
+            '...........#...#',
+            '............##',
+        ]
+        Initializer.place_cells(board, rows)
+
+    @staticmethod
+    def get_coordinates(rows):
+        coords = []
+        for index, row_string  in enumerate(rows):
+            y = len(rows) - index - 1
+            for x, c in enumerate(row_string):
+                if c == '#':
+                    coords.append((x + 1, y))
+        return coords
+
+    @staticmethod
+    def place_cells(board, row_strings):
+        coords = Initializer.get_coordinates(row_strings)
+        for x, y in coords:
+            board.birth(x, y)
+

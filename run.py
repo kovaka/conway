@@ -15,7 +15,7 @@ def run_board(states):
     """push world states onto the Queue"""
     board = Board()
 
-    Initializer.weekender(board)
+    Initializer.gliders(board)
 
     try:
         while True:
