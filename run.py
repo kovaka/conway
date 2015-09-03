@@ -6,16 +6,17 @@ a quick test script for quickly checking functionality
 
 """
 from multiprocessing import Process, Queue
+from time import sleep
+import argparse
+
 from Board import Board
 from Window import Window
-from time import sleep
 from Initializer import Initializer
-import argparse
 
 def run_board(states):
     """push world states onto the Queue"""
     board = Board()
-    Initializer.weekender(board)
+    Initializer.init_file(board, './boards/test.cells')
 
     try:
         while True:
@@ -31,15 +32,13 @@ def run_window(states):
         while True:
             cell_state = states.get()
             window.draw_board(cell_state)
-            for i in range(3):
+            for i in range(2):
                 window.get_arrow_key(50)
 
 def main():
-    states = Queue()
+    states = Queue(maxsize = 100)
     board_ps = Process(target=run_board, args=(states,))
     board_ps.start()
-
-    sleep(1)
 
     try:
         run_window(states)

@@ -22,7 +22,7 @@ class Board():
 
     def evolve(self):
         """Advance the board one generation"""
-        next_state = OrderedDict()
+        self.next_state = OrderedDict()
         new_cells = []
         dead_cells = []
 
@@ -31,7 +31,7 @@ class Board():
             neighbors = cell.count_neighbors()
 
             if neighbors in (2, 3):
-                next_state[loc] = cell
+                self.next_state[loc] = cell
             else:
                 dead_cells.append(loc)
 
@@ -44,14 +44,12 @@ class Board():
                 if self.count_neighbors(space) == 3 and space not in new_cells:
                     new_cells.append(space)
 
-        for loc in dead_cells:
-            self.die(loc[0], loc[1])
+        for x, y in dead_cells:
+            self.die(x, y)
 
-        self.cells = next_state
+        self.cells = self.next_state
 
-        for loc in new_cells:
-            x = loc[0]
-            y = loc[1]
+        for x, y in new_cells:
             self.birth(x, y) 
 
     def count_neighbors(self, loc):
@@ -59,8 +57,8 @@ class Board():
         x = loc[0]
         y = loc[1]
         neighbors = []
-        for xtrans in range(-1, 2):
-            for ytrans in range(-1, 2):
+        for xtrans in (-1, 0, 1):
+            for ytrans in (-1, 0, 1):
                 if xtrans != 0 or ytrans != 0:
                     neighbors.append((x + xtrans, y + ytrans))
         count = 0
@@ -71,6 +69,7 @@ class Board():
     
     def die(self, x, y):
         self.cells[(x, y)].die()
+        del self.cells[(x, y)]
 
     def birth(self, x, y):
         """Add a cell to the board"""

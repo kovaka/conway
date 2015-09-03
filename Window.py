@@ -1,4 +1,3 @@
-import curses
 """
 @author kovaka
 
@@ -6,6 +5,8 @@ many hints taken from the manual at
 https://docs.python.org/2/howto/curses.html#curses-howto
 
 """
+
+import curses
 
 class Window():
     """
