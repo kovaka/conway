@@ -15,9 +15,9 @@ class Window():
     width : the width of the window
     height : the height of the window
     offset : (x, y) tuple detailing the offset from the center of the world
+    iteration : the number states displayed
     """
-    def __enter__(self):
-        """Allow use in with statement"""
+    def __init__(self):
         self.stdscr = curses.initscr()
         curses.noecho()
         curses.cbreak() 
@@ -31,7 +31,11 @@ class Window():
         self.height = dimensions[0]
 
         self.offset = (0, 0)
+        self.iteration = 0
 
+    def __enter__(self):
+        """Allow use in with statement"""
+        self.__init__()
         return self
 
     def __exit__(self, exc_type, exc_value, traceback):
@@ -73,6 +77,7 @@ class Window():
         message = 'Hit any key to continue'
         if len(message) < self.get_width():
             self.stdscr.addstr(0, 0, 'Hit any key to continue')
+        self.stdscr.timeout(-1)
         self.stdscr.getch()
 
     def get_arrow_key(self, timeout = 1000):
@@ -89,9 +94,7 @@ class Window():
         elif char == curses.KEY_DOWN:
             direction = (0, 1)
         elif char == ord(' '):
-            # pause until a key is pressed
-            self.stdscr.timeout(-1)
-            self.stdscr.getch()
+            self.pause()
 
         self.move(direction)
         self.stdscr.timeout(-1)
