@@ -6,7 +6,7 @@ class Initializer():
     def init_file(board, filename):
         with open(filename) as f:
             lines = f.readlines()
-            Initializer.place_cells(board, lines)
+        Initializer.place_cells(board, lines)
 
     @staticmethod
     def place_cells(board, row_strings, offset_x = 0, offset_y = 0):
@@ -20,7 +20,7 @@ class Initializer():
         coordinates of living cells
         """
         coords = []
-        y = 0
+        y = int(len(rows) / 2)
         for index, row_string  in enumerate(rows):
             if row_string[0] in ('#', '!'):
                 continue
