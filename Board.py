@@ -1,16 +1,16 @@
-import numpy as np
-from collections import OrderedDict
-
 """
 @author kovaka
 
 Implements the internal data structure for conway's game of life
 """
 
+import numpy as np
+from collections import OrderedDict
+
 class Board():
     """
-        Attributes:
-            cells: a list of all the living pieces
+    Attributes:
+        cells: a list of all the living pieces
     """
 
     def __init__(self):
@@ -21,7 +21,7 @@ class Board():
         return self.cells.keys()
 
     def evolve(self):
-        """ advance the board one generation """
+        """Advance the board one generation"""
         next_state = OrderedDict()
         new_cells = []
         dead_cells = []
@@ -41,9 +41,8 @@ class Board():
                 if space in self.cells:
                     continue
                 neighbors = self.count_neighbors(space)
-                if self.count_neighbors(space) == 3:
-                    if space not in new_cells:
-                        new_cells.append(space)
+                if self.count_neighbors(space) == 3 and space not in new_cells:
+                    new_cells.append(space)
 
         for loc in dead_cells:
             self.die(loc[0], loc[1])
@@ -173,7 +172,7 @@ class Cell():
         return self.neighbors[xtrans + 1][ytrans + 1]
 
     def connect(self, cell):
-        """connect this cell to another cell"""
+        """Connect this cell to another cell"""
         xtrans = self.x - cell.x
         ytrans = self.y - cell.y
 
