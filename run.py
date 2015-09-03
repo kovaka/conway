@@ -8,14 +8,14 @@ a quick test script for quickly checking functionality
 from multiprocessing import Process, Queue
 from Board import Board
 from Window import Window
+from time import sleep
 from Initializer import Initializer
-
+import argparse
 
 def run_board(states):
     """push world states onto the Queue"""
     board = Board()
-
-    Initializer.gliders(board)
+    Initializer.weekender(board)
 
     try:
         while True:
@@ -24,7 +24,6 @@ def run_board(states):
             states.put(cells)
     except KeyboardInterrupt:
         return
-
 
 def run_window(states):
     """pull world states off of the queue and print them"""
@@ -35,12 +34,12 @@ def run_window(states):
             for i in range(3):
                 window.get_arrow_key(50)
 
-
 def main():
-    states = Queue(maxsize=50)
-
+    states = Queue()
     board_ps = Process(target=run_board, args=(states,))
     board_ps.start()
+
+    sleep(1)
 
     try:
         run_window(states)
