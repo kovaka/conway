@@ -1,7 +1,8 @@
 # conway
 Play conway's game of life in your terminal
 
+Type in
 ```
 $ ./run.py
 ```
-in your terminal to start it
+at your terminal to start it
