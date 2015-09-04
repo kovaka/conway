@@ -170,6 +170,13 @@ class Cell():
 
         return self.neighbors[ytrans + 1][xtrans + 1]
 
+    def set_neighbor(self, cell, xtrans, ytrans):
+        assert(self.neighbors[ytrans + 1][xtrans + 1] == None)
+
+        self.neighbors[ytrans + 1][xtrans + 1] = cell
+        self.num_neighbors += 1
+        assert(self.num_neighbors >= 0 and self.num_neighbors < 9)
+
     def connect(self, cell):
         """Connect this cell to another cell"""
         xtrans = self.x - cell.x
@@ -177,16 +184,9 @@ class Cell():
 
         if xtrans == 0 and ytrans == 0:
             raise ValueError("cannot connect a cell to itself {} to {}".format((self.x, self.y), (cell.x, cell.y)))
-        elif self.distance(cell.x, cell.y) >= 2:
-            raise ValueError("Cells are not physical neighbors")
 
-        self.neighbors[ytrans + 1][xtrans + 1] = cell
-        self.num_neighbors += 1
-        assert(self.num_neighbors >= 0 and self.num_neighbors < 9)
-
-        cell.neighbors[-ytrans + 1][-xtrans + 1] = self
-        cell.num_neighbors += 1
-        assert(cell.num_neighbors >= 0 and cell.num_neighbors < 9)
+        self.set_neighbor(cell, -xtrans, -ytrans)
+        cell.set_neighbor(self, xtrans, ytrans)
 
     def die(self):
         """Sever a cell from all of its neighbors"""
@@ -195,10 +195,6 @@ class Cell():
                 if cell != None:
                     xtrans = self.x - cell.x
                     ytrans = self.y - cell.y
-                    cell.neighbors[-ytrans + 1][-xtrans + 1] = None
+                    cell.neighbors[ytrans + 1][xtrans + 1] = None
                     cell.num_neighbors -= 1
                     assert(cell.num_neighbors >= 0 and cell.num_neighbors < 9)
-    
-    def distance(self, x, y):
-        """Return the cartesian distance from the cell to the point (x, y)"""
-        return np.sqrt((self.x - x)**2 + (self.y - y)**2)
