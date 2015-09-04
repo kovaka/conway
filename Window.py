@@ -11,11 +11,11 @@ import curses
 class Window():
     """
     Attributes:
-    stdscr: the stdscr object returned by curses.initscr()
-    width : the width of the window
-    height : the height of the window
-    offset : (x, y) tuple detailing the offset from the center of the world
-    iteration : the number states displayed
+        stdscr: the stdscr object returned by curses.initscr()
+        width : the width of the window
+        height : the height of the window
+        iteration : the number states displayed
+        offset : (x, y) tuple detailing the offset from the center of the world
     """
     def __init__(self):
         self.stdscr = curses.initscr()
@@ -53,8 +53,10 @@ class Window():
         height = self.get_height()
 
         for cell in board_state:
+            # translate x and y into screen coordinates
             x = cell[0] + int(width / 2) - self.offset[0]
             y = -1 * cell[1] + int(height / 2)  - self.offset[1]
+
             if 1 < x < width and 1 < y < height:
                 self.stdscr.addch(y, x, '#')
 
@@ -62,6 +64,8 @@ class Window():
         self.stdscr.refresh()
 
         self.stdscr.addstr(0, 0, str(self.offset))
+        self.stdscr.addstr(height - 1, 0, "Iteration: {} ".format(self.iteration))
+        self.iteration += 1
 
     def get_width(self):
         return self.width
@@ -78,7 +82,9 @@ class Window():
         if len(message) < self.get_width():
             self.stdscr.addstr(0, 0, 'Hit any key to continue')
         self.stdscr.timeout(-1)
-        self.stdscr.getch()
+        char = self.stdscr.getch()
+        if char == ord('q'):
+            raise KeyboardInterrupt
 
     def get_arrow_key(self, timeout = 1000):
         self.stdscr.timeout(timeout)
@@ -95,6 +101,8 @@ class Window():
             direction = (0, 1)
         elif char == ord(' '):
             self.pause()
+        elif char == ord('q'):
+            raise KeyboardInterrupt
 
         self.move(direction)
         self.stdscr.timeout(-1)

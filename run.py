@@ -8,15 +8,17 @@ a quick test script for quickly checking functionality
 from multiprocessing import Process, Queue
 from time import sleep
 import argparse
+import sys
+import os
 
 from Board import Board
 from Window import Window
 from Initializer import Initializer
 
-def run_board(states):
+def run_board(states, filename):
     """push world states onto the Queue"""
     board = Board()
-    Initializer.init_file(board, './boards/p15prepulsarspaceship.cells')
+    Initializer.init_file(board, filename)
     cells = board.get_cells()
     states.put(cells)
 
@@ -40,9 +42,9 @@ def run_window(states):
             for i in range(2):
                 window.get_arrow_key(50)
 
-def main():
+def main(args):
     states = Queue(maxsize = 100)
-    board_ps = Process(target=run_board, args=(states,))
+    board_ps = Process(target=run_board, args=(states, args.file))
     board_ps.start()
 
     try:
@@ -55,4 +57,12 @@ def main():
     print 'done...'
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('file', help='Specify which file to use to read the initial board state from ')
+    args = parser.parse_args()
+
+    if os.path.isfile(args.file) == False:
+        print ("File does not exit")
+        sys.exit()
+
+    main(args)

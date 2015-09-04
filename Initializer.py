@@ -11,8 +11,20 @@ class Initializer():
     @staticmethod
     def place_cells(board, row_strings, offset_x = 0, offset_y = 0):
         coords = Initializer.get_coordinates(row_strings)
+        avgLoc = Initializer.findAvgLoc(coords)
         for x, y in coords:
-            board.birth(x + offset_x, y + offset_y)
+            board.birth(x + offset_x - avgLoc[0], y + offset_y - avgLoc[0])
+
+    @staticmethod
+    def findAvgLoc(coords):
+        avgX = 0
+        avgY = 0
+        for x, y in coords:
+            avgX += x
+            avgY += y
+        avgX = avgX / len(coords)
+        avgY = avgY / len(coords)
+        return (avgX, avgY)
 
     @staticmethod
     def get_coordinates(rows):
@@ -20,7 +32,7 @@ class Initializer():
         coordinates of living cells
         """
         coords = []
-        y = int(len(rows) / 2)
+        y = len(rows)
         for index, row_string  in enumerate(rows):
             if row_string[0] in ('#', '!'):
                 continue
