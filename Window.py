@@ -62,10 +62,15 @@ class Window():
 
         self.stdscr.border()
         self.stdscr.refresh()
+        self.iteration += 1
 
         self.stdscr.addstr(0, 0, str(self.offset))
-        self.stdscr.addstr(height - 1, 0, "Iteration: {} ".format(self.iteration))
-        self.iteration += 1
+
+        iter_message = "Generation: {} ".format(self.iteration)
+        self.stdscr.addstr(height - 1, 0, iter_message)
+
+        pop_message = "Population: {0: <5}".format(len(board_state))
+        self.stdscr.addstr(height - 1, width -1 - len(pop_message), pop_message)
 
     def get_width(self):
         return self.width
