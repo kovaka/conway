@@ -16,7 +16,7 @@ from Initializer import Initializer
 def run_board(states):
     """push world states onto the Queue"""
     board = Board()
-    Initializer.init_file(board, './boards/gosperglidergun.cells')
+    Initializer.init_file(board, './boards/p15prepulsarspaceship.cells')
     cells = board.get_cells()
     states.put(cells)
 
